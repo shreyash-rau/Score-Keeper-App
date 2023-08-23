@@ -1,0 +1,156 @@
+<!--  Embedding JavaScript inside JSX -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSX Score Keeper App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body style = 'border:2px solid black '>
+    <div id ='root' style="text-align: center; background-color: aqua;"></div>
+    <script type ='text/babel'>
+
+        // seperat store the value of score and wicket bcos is easy to chnge or say its chnge always after clicking on it
+        let score = 0;
+        let wicket = 0;
+        let ballWiseResult = [];
+        let hit = 0;
+        // pre-defined function in react to get comments 
+        let inputRef = React.createRef();
+
+
+
+        // creating the function on button 1 to get alert msg on click
+        // function Click1(){
+        //     alert('U click On Button 1');
+        // }
+
+        // //for chnging the UI/Display function is
+        // function Click1(){
+        //     // after each click score will be increased by 
+        //     score += 1; 
+        //     // For re - rendering of score the app should be 1st render, without this the score cant display on screen
+        //     // after clicking, its only updating on console rather than display
+        //     element.render(<App/>);
+        //     // its help to show the update result in console
+        //     console.log(score);
+        // }
+    //this are the only one solution for all score 
+        function Scores(num){
+            hit = num;
+        
+                // ballWiseResult.push(num); 
+                // score += num;
+                element.render(<App/>);
+                // console.log(ballWiseResult);
+            
+        }
+
+    //function for wicket 
+        function wicket1(){
+            hit = 'w';
+            // if(wicket < 11){
+            //     ballWiseResult.push('w');
+            //     wicket += 1;
+                element.render(<App/>);
+                // console.log(ballWiseResult);
+            // }
+        }
+
+
+    // for showing the all kind of button here used 
+    const AllButton = () => ( <div> 
+        <button onClick = {() => Scores(0)}>0</button>
+        <button onClick = {() => Scores(1)}>1</button>
+        <button onClick = {() => Scores(2)} >2</button>
+        <button onClick = {() => Scores(3)} >3</button>
+        <button onClick = {() => Scores(4)} >4</button>
+        <button onClick = {() => Scores(5)} >5</button>
+        <button onClick = {() => Scores(6)} >6</button>
+        <button onClick = {wicket1}>wicket</button>  </div>
+    )
+
+    // fot showing ball wise result
+    const Result = () => (
+        <div>
+            {ballWiseResult.map((res,index)=>( 
+                <>
+                {index % 6 === 0 ? <br/>: null}
+                <span key ={index}>
+                    {res === 0 ? <strong>.</strong>:res }
+                    &nbsp;&nbsp;&nbsp;</span>
+                
+                </> ))}
+        </div>
+        )
+
+    // this is the extra fuction to prevent the default fuction
+    function handleSubmit(event) { 
+        event.preventDefault();
+    // condition to increase the score and wicket 
+        if (hit == 'w'){
+            wicket += 1;
+        }else {
+            score += hit;
+        }
+
+        // bala wise resulet shoulb be submited in new line in starting 
+        // for starting we used 'unshift' to store new value to starting on lod one 
+        // unshift = value start always from '0' index
+        ballWiseResult.unshift(
+            // normally we used this step
+            // <span>{hit}{' ',' '}{inputRef.current.value}</span> 
+            
+            // we want used more effectively then 
+            <span>{`${hit},   ${inputRef.current.value}`}</span>
+
+        );
+
+         // after each sumbit the old value will be erase
+        hit = 0;
+        inputRef.current.value = "";
+
+        // console.log(inputRef.current.value)
+        // its imp to show always new one like rendering each and every inputs to get output
+        element.render(<App/>);
+    }
+
+    // to creat the input and submit the score section 1st show the score and then submit 
+    // after clicking submit the score will updates 
+    const Forms = () => ( <form onSubmit = {handleSubmit}>
+        <input value = {hit}/>
+        <input ref = {inputRef} placeholder= "add the comments "/>
+        <button>Submit</button>  </form> 
+    )
+
+
+
+
+        const App = () => ( <>
+
+            <h1>Score Card Of Players</h1>
+            <h2>Score Keeper</h2>
+            <h2>Score : {score} / {wicket}</h2>
+            <AllButton/>
+         <br/>
+            <Forms/>
+        <hr/>
+
+        <div>
+            {ballWiseResult.map((res, index) => (
+            <p key={index}> {res}</p>
+        ))}  </div>
+
+            </>  );
+
+
+    const element = ReactDOM.createRoot(document.getElementById('root'));
+    element.render(<App/>);
+    </script>
+    
+</body>
+</html>
